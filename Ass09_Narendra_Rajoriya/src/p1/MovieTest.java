@@ -128,6 +128,9 @@ class Movie{
 		}
 		return flag;
 	}
+	public static void addMovie(Movie movie,List<Movie>movieList) {
+		movieList.add(movie);
+	}
 		
 }
 	
@@ -136,17 +139,29 @@ class MovieTest {
 	static List<Movie> movieList;
 	
 	public static void main(String[] args) {
+		Movie m = new Movie();
+		m.setMovieId(4);
+		m.setName("Three Idiot");
+		m.setCategory("comedy");
+		m.setLanguage("Hindi");
+		m.setReleaseDate("2015-06-13");
+		String[] arr={"Aamir Khan","Kareena Kapur"};
+		m.setCasting(Arrays.asList(arr));
+		m.setRatings(3.5);
+		m.setTotalBusinessDone(100);
 		movieList=Movie.populateMovies(new File("C:\\Users\\NARENDRA\\git\\Assignment09_Narendra_Rajoirya\\Ass09_Narendra_Rajoriya\\TextFiles\\movies.txt"));
+		Movie.addMovie(m, movieList);
 		Iterator<Movie> it = movieList.iterator();
 		while(it.hasNext()) {
 			System.out.println(it.next());
 		}
+		/*
 		boolean b =Movie.allMoviesInDb(movieList);
 		if(b==true) {
 			System.out.println("Inserted");
 		}else {
 			System.out.println("Insertion failed");
-		}
+		}*/
 	}
 	
 }
