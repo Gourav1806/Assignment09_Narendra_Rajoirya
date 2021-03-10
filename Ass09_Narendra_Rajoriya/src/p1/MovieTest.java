@@ -1,6 +1,7 @@
 package p1;
 import java.util.*;
 import java.io.*;
+import java.sql.*;
 class Movie{
 	private int movieId;
 	private String name;
@@ -69,7 +70,6 @@ class Movie{
 			byte[] arr = new byte[(int)f.length()];
 			fi.read(arr);
 			String s = new String(arr);
-			System.out.println(s);
 			String[] count = s.split("\n");
 			for(int i=0;i<count.length;i++) {
 				m=new Movie();
@@ -94,6 +94,40 @@ class Movie{
 		}
 		return movieList;
 	}
+	public static boolean allMoviesInDb(List<Movie> ls){
+		boolean flag = false;
+		int t1 =0,t2=0;
+		Movie m;
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/movie","root","1234");
+			for(int i=0;i<ls.size();i++) {
+				m=ls.get(i);
+				PreparedStatement ps =con.prepareStatement("Insert into movies values (?,?,?,?,?,?,?)");
+				ps.setInt(1, m.getMovieId());
+				ps.setString(2, m.getName());
+				ps.setString(3, m.getCategory());
+				ps.setString(4, m.getLanguage());
+				ps.setString(5, m.getReleaseDate());
+				ps.setDouble(6, m.getRatings());
+				ps.setDouble(7, m.getTotalBusinessDone());
+				t1 = ps.executeUpdate();
+				List<String>cast = m.getCasting();
+				for(int j=0;j<cast.size();j++) {
+					PreparedStatement ps1 = con.prepareStatement("Insert into casting values (?,?)");
+					ps1.setInt(1,m.getMovieId());
+					ps1.setString(2, cast.get(j).trim());
+					t2=ps1.executeUpdate();
+				}
+				if(t1!=0&&t2!=0) {
+					flag = true;
+				}
+			}
+		}catch(ClassNotFoundException|SQLException e) {
+			e.printStackTrace();
+		}
+		return flag;
+	}
 		
 }
 	
@@ -106,6 +140,12 @@ class MovieTest {
 		Iterator<Movie> it = movieList.iterator();
 		while(it.hasNext()) {
 			System.out.println(it.next());
+		}
+		boolean b =Movie.allMoviesInDb(movieList);
+		if(b==true) {
+			System.out.println("Inserted");
+		}else {
+			System.out.println("Insertion failed");
 		}
 	}
 	
