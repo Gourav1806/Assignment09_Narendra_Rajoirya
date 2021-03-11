@@ -159,11 +159,38 @@ class Movie implements Serializable{
 		}
 		return ls;
 	}
+	
 }
 	
 
 class MovieTest {
 	static List<Movie> movieList;
+	public static List<Movie> getMoviesReleasedInYear(int year){
+		List<Movie> m = new ArrayList<Movie>();
+		for(Movie ms : movieList) {
+			if(year == Integer.parseInt(ms.getReleaseDate().toString().substring(0,4))) {
+				m.add(ms);
+			}
+		}
+		return m;
+	}
+	public static List<Movie> getMoviesByActor(String... actorNames){
+		List <Movie> m=new ArrayList<Movie>();
+		for (Movie ms: movieList)
+		{
+			for (String st:ms.getCasting())
+			{
+				
+				if(Arrays.asList(actorNames).contains(st))
+				{
+					m.add(ms);
+					break;
+				}
+			}
+		}
+		return m;
+	}
+
 	static void displayMovieList(List<Movie> movieList) {
 		Iterator<Movie> it = movieList.iterator();
 		while(it.hasNext()) {
@@ -197,6 +224,13 @@ class MovieTest {
 		}else {
 			System.out.println("Insertion failed");
 		}*/
+		System.out.println("~~~~~~~~~~~~~~~~~~~~~~~");
+		List<Movie> yl = getMoviesReleasedInYear(2019);
+		displayMovieList(yl);
+		
+		System.out.println("~~~~~~~~~~~~~~~~~~~~~~~");
+		List<Movie> al = getMoviesByActor("Prabhas","Tammana");
+		displayMovieList(al);
 	}
 	
 }
