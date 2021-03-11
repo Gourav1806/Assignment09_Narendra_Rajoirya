@@ -2,7 +2,7 @@ package p1;
 import java.util.*;
 import java.io.*;
 import java.sql.*;
-class Movie{
+class Movie implements Serializable{
 	private int movieId;
 	private String name;
 	private String category;
@@ -131,12 +131,45 @@ class Movie{
 	public static void addMovie(Movie movie,List<Movie>movieList) {
 		movieList.add(movie);
 	}
+	public static void serializeMovies(List<Movie> ls,String fileName) {
+		File f = new File(fileName);
 		
+		try {
+			FileOutputStream fos = new FileOutputStream(f);
+			ObjectOutputStream oos = new ObjectOutputStream(fos);
+			oos.writeObject(ls);
+		}catch(FileNotFoundException e) {
+			e.printStackTrace();
+		}catch(IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
+
+	@SuppressWarnings("unchecked")
+	public static List<Movie> deserializeMovie(String fileName){
+		List<Movie> ls = new ArrayList<Movie>();
+		Movie movie=null;
+		try {
+			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fileName));
+			ls=(ArrayList<Movie>)ois.readObject();
+			ois.close();
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return ls;
+	}
 }
 	
 
 class MovieTest {
 	static List<Movie> movieList;
+	static void displayMovieList(List<Movie> movieList) {
+		Iterator<Movie> it = movieList.iterator();
+		while(it.hasNext()) {
+			System.out.println(it.next());
+		}
+	}
 	
 	public static void main(String[] args) {
 		Movie m = new Movie();
@@ -151,10 +184,12 @@ class MovieTest {
 		m.setTotalBusinessDone(100);
 		movieList=Movie.populateMovies(new File("C:\\Users\\NARENDRA\\git\\Assignment09_Narendra_Rajoirya\\Ass09_Narendra_Rajoriya\\TextFiles\\movies.txt"));
 		Movie.addMovie(m, movieList);
-		Iterator<Movie> it = movieList.iterator();
-		while(it.hasNext()) {
-			System.out.println(it.next());
-		}
+		displayMovieList(movieList);
+		/*
+		Movie.serializeMovies(movieList, "C:\\Users\\NARENDRA\\git\\Assignment09_Narendra_Rajoirya\\Ass09_Narendra_Rajoriya\\TextFiles\\serialize_movie.txt");
+		List<Movie> l = Movie.deserializeMovie("C:\\Users\\NARENDRA\\git\\Assignment09_Narendra_Rajoirya\\Ass09_Narendra_Rajoriya\\TextFiles\\serialize_movie.txt");
+		displayMovieList(l);
+		*/
 		/*
 		boolean b =Movie.allMoviesInDb(movieList);
 		if(b==true) {
