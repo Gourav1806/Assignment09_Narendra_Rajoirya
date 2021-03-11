@@ -2,7 +2,7 @@ package p1;
 import java.util.*;
 import java.io.*;
 import java.sql.*;
-class Movie implements Serializable{
+class Movie implements Serializable,Comparable<Movie>{
 	private int movieId;
 	private String name;
 	private String category;
@@ -61,6 +61,19 @@ class Movie implements Serializable{
 	}
 	public String toString() {
 		return Integer.toString(this.getMovieId())+" - "+this.getName()+" - "+this.getCategory()+" - "+this.getLanguage()+" - "+this.getReleaseDate()+" - "+this.getCasting()+" - "+Double.toString(this.getRatings())+" - "+Double.toString(this.getTotalBusinessDone());
+	}
+	public int compareTo(Movie m) {
+		int res=-1;
+		int i1=this.getMovieId();
+		int i2 = m.getMovieId();
+		if(i1>i2) {
+			res=1;
+		}else if(i1<i2) {
+			res=-1;
+		}else {
+			res=0;
+		}
+		return res;
 	}
 	public static List<Movie> populateMovies(File f){
 		Movie m;
@@ -190,7 +203,22 @@ class MovieTest {
 		}
 		return m;
 	}
-
+	static void updateMovieRatings(Movie movie,double ratings,List<Movie> movieList) {
+		for (Movie m:movieList)
+		{
+			if(m.equals(movie))
+			{
+				m.setRatings(ratings);
+			}
+		}
+	}
+	static void updateBusiness(Movie movie,double amount,List<Movie> movieList) {
+		for(Movie m: movieList) {
+			if(m.equals(movie)) {
+				m.setTotalBusinessDone(amount);
+			}
+		}
+	}
 	static void displayMovieList(List<Movie> movieList) {
 		Iterator<Movie> it = movieList.iterator();
 		while(it.hasNext()) {
@@ -224,6 +252,7 @@ class MovieTest {
 		}else {
 			System.out.println("Insertion failed");
 		}*/
+		/*
 		System.out.println("~~~~~~~~~~~~~~~~~~~~~~~");
 		List<Movie> yl = getMoviesReleasedInYear(2019);
 		displayMovieList(yl);
@@ -231,6 +260,13 @@ class MovieTest {
 		System.out.println("~~~~~~~~~~~~~~~~~~~~~~~");
 		List<Movie> al = getMoviesByActor("Prabhas","Tammana");
 		displayMovieList(al);
+		*/
+		System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+		updateMovieRatings(m, 3.0, movieList);
+		displayMovieList(movieList);
+		System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+		updateBusiness(m, 150, movieList);
+		displayMovieList(movieList);
 	}
 	
 }
