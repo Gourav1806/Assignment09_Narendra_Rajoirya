@@ -226,6 +226,37 @@ class MovieTest {
 		}
 	}
 	
+	static Map<String,Set<Movie>> businessDone(double amount)
+	{
+		Set<Movie> bus=new TreeSet<Movie>();
+		Map<String,Set<Movie>> map=new HashMap<String,Set<Movie>>();
+		for (Movie m:movieList)
+		{
+			if(m.getTotalBusinessDone()>amount)
+			{
+				
+				bus.add(m);
+				if(map.containsKey(m.getLanguage()))
+				{
+					map.get(m.getLanguage()).add(m);
+				}
+				else {
+				Set<Movie> bus2=new TreeSet<Movie>();
+				bus2.add(m);
+				map.put(m.getLanguage(),bus2);	
+				}
+			}
+			
+		}
+		
+		for(Map.Entry m : map.entrySet()){    
+			    System.out.println(m.getKey()+" "+m.getValue());    
+		}  
+	
+		return map;
+		
+		
+	}
 	public static void main(String[] args) {
 		Movie m = new Movie();
 		m.setMovieId(4);
@@ -267,6 +298,8 @@ class MovieTest {
 		System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 		updateBusiness(m, 150, movieList);
 		displayMovieList(movieList);
+		System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+		businessDone(100);
 	}
 	
 }
